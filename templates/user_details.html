@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details | Qrify</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h2, h3 {
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        .user-details,
+        .address-details,
+        .all-addresses,
+        .qr-codes {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        .user-details p,
+        .address-details p,
+        .all-addresses li p,
+        .qr-codes p {
+            margin: 0;
+            color: #555;
+        }
+
+        .user-details p strong,
+        .address-details p strong,
+        .all-addresses li p strong,
+        .qr-codes p strong {
+            color: #007BFF;
+        }
+
+        .all-addresses {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .all-addresses li {
+            background-color: #f4f4f4;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .qr-codes .dropdown {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+    </style>
+    <!-- Add your additional styling if needed -->
+</head>
+<body>
+    <h2>User Details</h2>
+    <div class="user-details">
+        <p><strong>Name:</strong> {{ user.get('name', 'N/A') }}</p>
+        <p><strong>Phone Number:</strong> {{ user.get('phone_number', 'N/A') }}</p>
+    </div>
+
+    {% if address %}
+        <div class="address-details">
+            <h3>Address Details</h3>
+            <p><strong>Address ID:</strong> {{ address['id'] }}</p>
+            <p><strong>Address:</strong> {{ address['address'] }}</p>
+        </div>
+    {% else %}
+        <div class="all-addresses">
+            <h3>All Addresses</h3>
+            <ul>
+                {% for addr in user.get('addresses', []) %}
+                    <li>
+                        <p><strong>Address ID:</strong> {{ addr['id'] }}</p>
+                        <p><strong>Address:</strong> {{ addr['address'] }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="qr-codes">
+        <h3>QR Codes:</h3>
+        {% for qr_code in user.get('qr_codes', []) %}
+            <div class="dropdown">
+                <p><strong>QR Code ID:</strong> {{ qr_code['id'] }}</p>
+                <span class="dropdown-content">
+                    Address: {{ qr_code['address'] }}
+                    <img src="data:image/png;base64,{{ qr_code['qr_code'] }}" alt="QR Code">
+                </span>
+                <img class="dropdown" src="data:image/png;base64,{{ qr_code['qr_code'] }}" alt="QR Code">
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.querySelectorAll('.dropdown').forEach(function (dropdown) {
+            dropdown.addEventListener('click', function () {
+                var content = this.querySelector('.dropdown-content');
+                content.style.display = (content.style.display === 'block') ? 'none' : 'block';
+            });
+        });
+    </script>
+</body>
+</html>
