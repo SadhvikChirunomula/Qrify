@@ -78,7 +78,7 @@ def address():
         users[user_id]['addresses'].append({'id': address_id, 'address': address})
 
         # Generate QR code for the address
-        qr_code_data = f"http://192.168.29.75:5000/user?id={user_id}&addressId={address_id}"  # Updated QR code data
+        qr_code_data = f"https://qrify-nb3b.onrender.com/user?id={user_id}&addressId={address_id}"  # Updated QR code data
         qr = generate_qr_code(qr_code_data)
 
         # Save the QR code to a BytesIO object
